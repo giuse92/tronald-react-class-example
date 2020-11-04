@@ -13,14 +13,12 @@ const CurrentQuote = ({ currentQuote }) => {
                 <>
                     <q style={{ color: 'red' }}>{currentQuote.value}</q>
                     <div>
-                        
-                            <span>&#127919; </span>
-                            <i>{currentQuote.tags.length === 0 ? 'No target detected' : currentQuote.tags}</i>
-                        
+                        <span>&#127919; </span>
+                        <i>{currentQuote.tags.length === 0 ? 'No target detected' : currentQuote.tags}</i>
                     </div>
                     <div>
                         <span>&#128198; </span>
-                        <small> 
+                        <small>
                             {`${month} - ${day} - ${year}`}
                         </small>
                     </div>
