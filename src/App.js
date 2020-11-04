@@ -1,9 +1,11 @@
 import React from 'react';
 import './App.css';
+import logo from './trump.gif';
+import TagList from './components/TagList'
 
 // TODO:
 // FACILE
-// 1) dividere i componenti in file diversi
+// 1) dividere i componenti in file diversi ***FATTO***
 // 2) this.state.currentQuote
 //    creare un componente che visualizzi, oltre che la citazione stessa, anche:
 //    - lista di tag associati alla citazione (array "tags")
@@ -20,31 +22,9 @@ import './App.css';
 // 7) arricchire il componente creato nel punto 2 con un meccanismo di cancellazione (solo in modalità lista)
 //    (utilizzate il campo "quote_id" all'interno della citazione)
 
-
-const logo = require("./trump.gif")
-
 const RANDOMURL = 'https://api.tronalddump.io/random/quote'
 // const SEARCHURL = 'https://api.tronalddump.io/search/quote'
 // const ALLTAGSURL = 'https://api.tronalddump.io/tag'
-
-const TagList = (props) => {
-  return (
-  <p>
-    {props.storedTags.map((tag, index) => 
-      <span key={`tag-${index}`}>
-        <a
-          name={tag}
-          onClick={props.onTagClick}
-          className={props.selectedTag === tag ? "App-link-selected" : "App-link"}
-          href="#"
-        >
-          {tag}
-        </a>
-        {index === props.storedTags.length - 1 ? '' : ' | ' }
-      </span>
-    )}
-  </p>
-)}
 
 class App extends React.Component {
   constructor(props) {
@@ -85,7 +65,7 @@ class App extends React.Component {
       // throw new Error blocks the execution, and jumps directly into 'CATCH'
       if (data.error) throw new Error(data.error)
 
-      quote = {...data}
+      quote = { ...data }
 
       // checking stored quotes
       // avoid condition if array is empty

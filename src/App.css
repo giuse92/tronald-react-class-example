@@ -26,6 +26,10 @@
 .App-link {
   color: #61dafb;
 }
+
+.App-link:hover {
+  cursor: pointer;
+}
 /* h1.App-link {
   color: #61dafb;
 } */
