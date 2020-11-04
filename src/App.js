@@ -1,12 +1,13 @@
 import React from 'react';
 import './App.css';
 import logo from './trump.gif';
-import TagList from './components/TagList'
+import TagList from './components/TagList';
+import CurrentQuote from './components/CurrentQuote'
 
 // TODO:
 // FACILE
 // 1) dividere i componenti in file diversi ***FATTO***
-// 2) this.state.currentQuote
+// 2) this.state.currentQuote ***FATTO***
 //    creare un componente che visualizzi, oltre che la citazione stessa, anche:
 //    - lista di tag associati alla citazione (array "tags")
 //    - data della citazione (appeared_at)
@@ -148,7 +149,7 @@ class App extends React.Component {
                 </h2>
               </button>
             </p>
-            <p>{this.state.currentQuote.value}</p>
+              <CurrentQuote currentQuote={this.state.currentQuote} />
           </>)}
           <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
           <p>Tag salvati: {this.state.storedTags.length}</p>
