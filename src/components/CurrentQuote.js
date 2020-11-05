@@ -24,7 +24,7 @@ const CurrentQuote = ({ currentQuote }) => {
                     </div>
                     <div>
                         <span>&#128204; </span>
-                        <a href={`${currentQuote._embedded.source[0].url}`} target="_blank">Source</a>
+                        <a href={`${currentQuote._embedded.source[0].url}`} rel="noreferrer" target="_blank">Source</a>
                     </div>
                 </>
             )

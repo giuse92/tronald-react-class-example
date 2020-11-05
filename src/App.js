@@ -2,7 +2,8 @@ import React from 'react';
 import './App.css';
 import logo from './trump.gif';
 import TagList from './components/TagList';
-import CurrentQuote from './components/CurrentQuote'
+import CurrentQuote from './components/CurrentQuote';
+import ErrorMessage from './components/ErrorMessage'
 
 // TODO:
 // FACILE
@@ -13,7 +14,7 @@ import CurrentQuote from './components/CurrentQuote'
 //    - data della citazione (appeared_at)
 //    - link alla fonte della citazione (investigare nella chiave "_embedded",
 //      prendete sempre il primo elemento dell'array "source")
-// 3) gestione carina ed appropriata degli errori (this.state.error)
+// 3) gestione carina ed appropriata degli errori (this.state.error) ***FATTO***
 // 4) modalità lista, visualizzare le citazioni associate al tag selezionato
 //    (utilizzando il componente creato nel punto 2)
 //    (fatelo comportare in maniera diversa a seconda della modalità random/list)
@@ -23,7 +24,7 @@ import CurrentQuote from './components/CurrentQuote'
 // 7) arricchire il componente creato nel punto 2 con un meccanismo di cancellazione (solo in modalità lista)
 //    (utilizzate il campo "quote_id" all'interno della citazione)
 
-const RANDOMURL = 'https://api.tronalddump.io/random/quote'
+const RANDOMURL = 'https://api.tronalddump.io/random/quotesss'
 // const SEARCHURL = 'https://api.tronalddump.io/search/quote'
 // const ALLTAGSURL = 'https://api.tronalddump.io/tag'
 
@@ -60,11 +61,11 @@ class App extends React.Component {
       this.setState({ loading: true })
       let response = await fetch(RANDOMURL)
       let data = await response.json()
-      // console.log('NEL TRY DATA: ', data)
+      console.log('NEL TRY DATA: ', data)
       // promise is still resolved even if no quotes got fetched (example: wrong url)
       // need to handle this situation manually
       // throw new Error blocks the execution, and jumps directly into 'CATCH'
-      if (data.error) throw new Error(data.error)
+      if (data.message) throw new Error(data.message)
 
       quote = { ...data }
 
@@ -90,13 +91,14 @@ class App extends React.Component {
         })
       }
     } catch (err) {
-      // console.log('SONO NEL CATCH: ', err)
-      error = true
+      console.log('SONO NEL CATCH: ', err)
+      error = true;
+      error ? this.setState({ ...this.state, fetchErr: err }) : this.setState(...this.state);
     } finally {
       // using setState with prevState
       // see https://css-tricks.com/understanding-react-setstate/
       this.setState((prevState) => {
-        const quotesToSave = isNewQuote ? [...prevState.storedQuotes, quote] : prevState.storedQuotes
+        const quotesToSave = (isNewQuote && error !== true) ? [...prevState.storedQuotes, quote] : prevState.storedQuotes
         // storing into localStorage
         localStorage.setItem('trumpQuotes', JSON.stringify(quotesToSave))
         localStorage.setItem('trumpQuotesTags', JSON.stringify(storedTags))
@@ -143,7 +145,8 @@ class App extends React.Component {
             selectedTag={this.state.selectedTag}
           />) : (<>
             <p>
-              <button onClick={this.fetchAndSaveRandomTrump} disabled={this.state.loading}>
+              {this.state.error ? <ErrorMessage errState={this.state.fetchErr} /> : null}
+              <button onClick={this.fetchAndSaveRandomTrump} disabled={this.state.loading || this.state.error}>
                 <h2>
                   {this.state.loading ? 'loading...' : 'RANDOM TRUMP QUOTE'}
                 </h2>
