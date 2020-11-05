@@ -27,6 +27,7 @@ import ErrorMessage from './components/ErrorMessage'
 const RANDOMURL = 'https://api.tronalddump.io/random/quotesss'
 // const SEARCHURL = 'https://api.tronalddump.io/search/quote'
 // const ALLTAGSURL = 'https://api.tronalddump.io/tag'
+const bidenSmilingSrc = 'https://d3g9pb5nvr3u7.cloudfront.net/authors/59bb2de59744155625a7c141/-435182605/256.jpg'
 
 class App extends React.Component {
   constructor(props) {
@@ -130,7 +131,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className={`App-logo${this.state.loading ? " App-logo-spinning" : ""}`} alt="logo" />
+          <img src={this.state.error ? bidenSmilingSrc : logo} className={`App-logo${this.state.loading ? " App-logo-spinning" : ""}`} alt="logo" />
           <p>
             <button class="button" id="randombutton" type="button" onClick={this.onModeClick('random')} disabled={!this.state.isListMode}>
               <h3> RANDOM MODE </h3> 
