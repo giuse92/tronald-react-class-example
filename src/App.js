@@ -24,7 +24,7 @@ import ErrorMessage from './components/ErrorMessage'
 // 7) arricchire il componente creato nel punto 2 con un meccanismo di cancellazione (solo in modalità lista)
 //    (utilizzate il campo "quote_id" all'interno della citazione)
 
-const RANDOMURL = 'https://api.tronalddump.io/random/quotesss'
+const RANDOMURL = 'https://api.tronalddump.io/random/quote'
 // const SEARCHURL = 'https://api.tronalddump.io/search/quote'
 // const ALLTAGSURL = 'https://api.tronalddump.io/tag'
 const bidenSmilingSrc = 'https://d3g9pb5nvr3u7.cloudfront.net/authors/59bb2de59744155625a7c141/-435182605/256.jpg'
@@ -35,7 +35,9 @@ class App extends React.Component {
     this.state = {
       loading: false,
       error: false,
-      currentQuote: {},
+      currentQuote: ((JSON.parse(localStorage.getItem('trumpCurrentQuote'))) !== null
+        ? (JSON.parse(localStorage.getItem('trumpCurrentQuote')))
+        : {}),
       quotesToShow: [],
       // getting storage string with key 'trumpQuotes' and parsing it (if exists)
       storedQuotes: ((JSON.parse(localStorage.getItem('trumpQuotes'))) !== null 
@@ -103,6 +105,7 @@ class App extends React.Component {
         // storing into localStorage
         localStorage.setItem('trumpQuotes', JSON.stringify(quotesToSave))
         localStorage.setItem('trumpQuotesTags', JSON.stringify(storedTags))
+        localStorage.setItem('trumpCurrentQuote', JSON.stringify(quote))
         return {
           ...this.state, // see immutables
           currentQuote: error ? {} : quote,
@@ -153,8 +156,8 @@ class App extends React.Component {
                 </h2>
               </button>
             </p>
-              <CurrentQuote currentQuote={this.state.currentQuote} />
           </>)}
+          <CurrentQuote currentQuote={this.state.currentQuote} />
           <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
           <p>Tag salvati: {this.state.storedTags.length}</p>
         </header>

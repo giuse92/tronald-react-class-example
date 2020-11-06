@@ -11,6 +11,7 @@ const CurrentQuote = ({ currentQuote }) => {
         <>
             {currentQuote.value !== undefined && (
                 <>
+                    <h5 style={{ marginBottom: 0 }}>Current quote:</h5>
                     <q style={{ color: 'red' }}>{currentQuote.value}</q>
                     <div>
                         <span>&#127919; </span>
