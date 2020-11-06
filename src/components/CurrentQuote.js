@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CurrentQuote = ({ currentQuote }) => {
+const CurrentQuote = ({ currentQuote, isListMode, selectedTag, storedQuotes}) => {
     const monthsTxt = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const d = new Date(currentQuote.appeared_at);
     const day = d.getDate()
@@ -8,7 +8,13 @@ const CurrentQuote = ({ currentQuote }) => {
     const year = d.getFullYear();
 
     return (
-        <>
+        <>  
+            {isListMode ? (
+                <p>
+                    {selectedTag !== '' ? selectedTag : null}
+                </p>
+            )
+            : null}
             {currentQuote.value !== undefined && (
                 <>
                     <h5 style={{ marginBottom: 0 }}>Current quote:</h5>

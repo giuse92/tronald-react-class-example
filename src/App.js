@@ -18,7 +18,7 @@ import ErrorMessage from './components/ErrorMessage'
 // 4) modalità lista, visualizzare le citazioni associate al tag selezionato
 //    (utilizzando il componente creato nel punto 2)
 //    (fatelo comportare in maniera diversa a seconda della modalità random/list)
-// 5) tornando alla modalità random, deselezionare il tag selezionato
+// 5) tornando alla modalità random, deselezionare il tag selezionato ***FATTO***
 // medio/difficile
 // 6) arricchire il componente creato nel punto 2 con un meccanismo di salvataggio (solo in modalità random) - CONTROLLARE CHE LA CITAZIONE NON SIA STATA GIA' SALVATA (quote_id)
 // 7) arricchire il componente creato nel punto 2 con un meccanismo di cancellazione (solo in modalità lista)
@@ -122,7 +122,10 @@ class App extends React.Component {
   
   onModeClick = (mode) => (event) => {
     // console.log('MODE? ', mode)
-    this.setState({ isListMode: event.currentTarget.id === 'listbutton' ? true : false })
+    this.setState({ 
+      isListMode: event.currentTarget.id === 'listbutton' ? true : false,
+      selectedTag: event.currentTarget.id === 'randombutton' && '' 
+    })
   } 
 
   componentDidUpdate(prevProps, prevState) {
@@ -157,7 +160,12 @@ class App extends React.Component {
               </button>
             </p>
           </>)}
-          <CurrentQuote currentQuote={this.state.currentQuote} />
+          <CurrentQuote 
+          currentQuote={this.state.currentQuote} 
+          isListMode={this.state.isListMode}
+          selectedTag={this.state.selectedTag}
+          storedQuotes={this.state.storedQuotes}
+          />
           <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
           <p>Tag salvati: {this.state.storedTags.length}</p>
         </header>

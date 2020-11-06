@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TagList = ({storedTags, onTagClick, selectedTag}) => {
+const TagList = ({ storedTags, onTagClick, selectedTag }) => {
     return (
         <p>
             {storedTags.map((tag, index) =>
