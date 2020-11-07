@@ -1,27 +1,40 @@
 import React from 'react';
 
-const CurrentQuote = ({ currentQuote, isListMode, selectedTag, storedQuotes}) => {
+const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes}) => {
     const monthsTxt = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const d = new Date(currentQuote.appeared_at);
+    const d = new Date(currentQuoteState.appeared_at);
     const day = d.getDate()
     const month = monthsTxt[d.getMonth()];
     const year = d.getFullYear();
+    const filtedQuotes = storedQuotes.filter(obj => selectedTag === obj.tags[0]);
 
     return (
         <>  
             {isListMode ? (
-                <p>
-                    {selectedTag !== '' ? selectedTag : null}
-                </p>
+                <>
+                    {selectedTag !== '' ?
+                        <div style={{width: '50%', fontSize: '22px'}}>
+                            <ul style={{listStyle: 'none'}}>
+                                {filtedQuotes.map((q, i) => {
+                                    return (
+                                    <li key={`filted-quotes-${i}`} style={{borderBottom: '2px solid white'}}>
+                                        {q.value}
+                                    </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                        : null}
+                </>
             )
-            : null}
-            {currentQuote.value !== undefined && (
+                : null}
+            {currentQuoteState.value !== undefined && (
                 <>
                     <h5 style={{ marginBottom: 0 }}>Current quote:</h5>
-                    <q style={{ color: 'red' }}>{currentQuote.value}</q>
+                    <q style={{ color: 'red' }}>{currentQuoteState.value}</q>
                     <div>
                         <span>&#127919; </span>
-                        <i>{currentQuote.tags.length === 0 ? 'No target detected' : currentQuote.tags}</i>
+                        <i>{currentQuoteState.tags.length === 0 ? 'No target detected' : currentQuoteState.tags}</i>
                     </div>
                     <div>
                         <span>&#128198; </span>
@@ -31,7 +44,7 @@ const CurrentQuote = ({ currentQuote, isListMode, selectedTag, storedQuotes}) =>
                     </div>
                     <div>
                         <span>&#128204; </span>
-                        <a href={`${currentQuote._embedded.source[0].url}`} rel="noreferrer" target="_blank">Source</a>
+                        <a href={`${currentQuoteState._embedded.source[0].url}`} rel="noreferrer" target="_blank">Source</a>
                     </div>
                 </>
             )

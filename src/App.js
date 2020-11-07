@@ -15,7 +15,7 @@ import ErrorMessage from './components/ErrorMessage'
 //    - link alla fonte della citazione (investigare nella chiave "_embedded",
 //      prendete sempre il primo elemento dell'array "source")
 // 3) gestione carina ed appropriata degli errori (this.state.error) ***FATTO***
-// 4) modalità lista, visualizzare le citazioni associate al tag selezionato
+// 4) modalità lista, visualizzare le citazioni associate al tag selezionato ***FATTO***
 //    (utilizzando il componente creato nel punto 2)
 //    (fatelo comportare in maniera diversa a seconda della modalità random/list)
 // 5) tornando alla modalità random, deselezionare il tag selezionato ***FATTO***
@@ -64,7 +64,7 @@ class App extends React.Component {
       this.setState({ loading: true })
       let response = await fetch(RANDOMURL)
       let data = await response.json()
-      console.log('NEL TRY DATA: ', data)
+      //console.log('NEL TRY DATA: ', data)
       // promise is still resolved even if no quotes got fetched (example: wrong url)
       // need to handle this situation manually
       // throw new Error blocks the execution, and jumps directly into 'CATCH'
@@ -161,7 +161,7 @@ class App extends React.Component {
             </p>
           </>)}
           <CurrentQuote 
-          currentQuote={this.state.currentQuote} 
+          currentQuoteState={this.state.currentQuote} 
           isListMode={this.state.isListMode}
           selectedTag={this.state.selectedTag}
           storedQuotes={this.state.storedQuotes}
