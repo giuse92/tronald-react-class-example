@@ -51,7 +51,7 @@ class App extends React.Component {
   }
 
   // dividere in fetchRandomTrump() e saveRandomTrump()
-  fetchAndSaveRandomTrump = async () => {
+  fetchRandomTrump = async () => {
     let quote = {}
     let error = false
     const storedQuotes = this.state.storedQuotes
@@ -139,10 +139,10 @@ class App extends React.Component {
         <header className="App-header">
           <img src={this.state.error ? bidenSmilingSrc : logo} className={`App-logo${this.state.loading ? " App-logo-spinning" : ""}`} alt="logo" />
           <p>
-            <button class="button" id="randombutton" type="button" onClick={this.onModeClick('random')} disabled={!this.state.isListMode}>
+            <button className="button" id="randombutton" type="button" onClick={this.onModeClick('random')} disabled={!this.state.isListMode}>
               <h3> RANDOM MODE </h3> 
             </button>
-            <button class="button" id="listbutton" type="button" onClick={this.onModeClick('list')} disabled={this.state.isListMode}>
+            <button className="button" id="listbutton" type="button" onClick={this.onModeClick('list')} disabled={this.state.isListMode}>
               <h3> LIST MODE </h3>
             </button>
           </p>
@@ -153,7 +153,7 @@ class App extends React.Component {
           />) : (<>
             <p>
               {this.state.error ? <ErrorMessage errState={this.state.fetchErr} /> : null}
-              <button onClick={this.fetchAndSaveRandomTrump} disabled={this.state.loading || this.state.error}>
+                <button onClick={this.fetchRandomTrump} disabled={this.state.loading || this.state.error}>
                 <h2>
                   {this.state.loading ? 'loading...' : 'RANDOM TRUMP QUOTE'}
                 </h2>
@@ -165,6 +165,7 @@ class App extends React.Component {
           isListMode={this.state.isListMode}
           selectedTag={this.state.selectedTag}
           storedQuotes={this.state.storedQuotes}
+          isLoaded={this.state.loading}
           />
           <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
           <p>Tag salvati: {this.state.storedTags.length}</p>
