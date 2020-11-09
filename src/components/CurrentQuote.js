@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes}) => {
+const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes, ...rest}) => {
     const monthsTxt = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const d = new Date(currentQuoteState.appeared_at);
     const day = d.getDate()
@@ -17,7 +17,7 @@ const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes
                             <ul style={{listStyle: 'none'}}>
                                 {filteredQuotes.map((q, i) => {
                                     return (
-                                    <li key={`filted-quotes-${i}`} style={{borderBottom: '2px solid white'}}>
+                                    <li key={`filtered-quotes-${i}`} style={{borderBottom: '2px solid white'}}>
                                         {q.value}
                                     </li>
                                     )
@@ -27,7 +27,14 @@ const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes
                         : null}
                 </>
             )
-                : null}
+                : (
+                <button
+                onClick={rest.saveRandomQuote} 
+                disabled={rest.isLoaded ? true : false}
+                >
+                    <h2>SAVE</h2>
+                </button>
+                )}
             {currentQuoteState.value !== undefined && (
                 <>
                     <h5 style={{ marginBottom: 0 }}>Current quote:</h5>

@@ -20,7 +20,7 @@ import ErrorMessage from './components/ErrorMessage'
 //    (fatelo comportare in maniera diversa a seconda della modalità random/list)
 // 5) tornando alla modalità random, deselezionare il tag selezionato ***FATTO***
 // medio/difficile
-// 6) arricchire il componente creato nel punto 2 con un meccanismo di salvataggio (solo in modalità random) - CONTROLLARE CHE LA CITAZIONE NON SIA STATA GIA' SALVATA (quote_id)
+// 6) arricchire il componente creato nel punto 2 con un meccanismo di salvataggio (solo in modalità random) - CONTROLLARE CHE LA CITAZIONE NON SIA STATA GIA' SALVATA (quote_id) ***FATTO***
 // 7) arricchire il componente creato nel punto 2 con un meccanismo di cancellazione (solo in modalità lista)
 //    (utilizzate il campo "quote_id" all'interno della citazione)
 
@@ -54,11 +54,9 @@ class App extends React.Component {
   fetchRandomTrump = async () => {
     let quote = {}
     let error = false
-    const storedQuotes = this.state.storedQuotes
-    let storedTags = this.state.storedTags
-    // see inside quote.tags.forEach
-    // let storedTags = [...this.state.storedTags]
-    let isNewQuote = true
+
+    let getInfoElement = document.querySelector('small#new-quote') || document.querySelector('small#quote-already-exists');
+    getInfoElement !== null && getInfoElement.remove();
 
     try {
       this.setState({ loading: true })
@@ -72,27 +70,6 @@ class App extends React.Component {
 
       quote = { ...data }
 
-      // checking stored quotes
-      // avoid condition if array is empty
-      if (storedQuotes.length > 0) {
-        // check if quote already exists
-        const indexQuote = storedQuotes.findIndex(storedQuote => quote.quote_id === storedQuote.quote_id)
-        if (indexQuote > -1 ) { // this means that quote already exists!
-          isNewQuote = false
-        }
-      }
-
-      // checking for each retrieved tag, if exists
-      if (quote.tags.length > 0) {
-        quote.tags.forEach(currentTag => {
-          const indexTag = storedTags.findIndex(storedTag => storedTag === currentTag)
-          if (indexTag === -1) {
-            // mutable operation will lead to bugs here
-            // storedTags.push(currentTag)
-            storedTags = [...storedTags, currentTag]
-          }
-        })
-      }
     } catch (err) {
       console.log('SONO NEL CATCH: ', err)
       error = true;
@@ -101,21 +78,72 @@ class App extends React.Component {
       // using setState with prevState
       // see https://css-tricks.com/understanding-react-setstate/
       this.setState((prevState) => {
-        const quotesToSave = (isNewQuote && error !== true) ? [...prevState.storedQuotes, quote] : prevState.storedQuotes
-        // storing into localStorage
-        localStorage.setItem('trumpQuotes', JSON.stringify(quotesToSave))
-        localStorage.setItem('trumpQuotesTags', JSON.stringify(storedTags))
         localStorage.setItem('trumpCurrentQuote', JSON.stringify(quote))
         return {
           ...this.state, // see immutables
           currentQuote: error ? {} : quote,
           loading: false,
-          storedQuotes: [...quotesToSave],
-          storedTags: [...storedTags],
           error
         }
       })
     }
+  }
+
+  saveRandomQuote = (event) => {
+    const storedQuotes = this.state.storedQuotes
+    let storedTags = this.state.storedTags
+    // see inside quote.tags.forEach
+    // let storedTags = [...this.state.storedTags]
+    let isNewQuote = true;
+
+    // checking for each retrieved tag, if exists
+    if (this.state.currentQuote.tags.length > 0) {
+      this.state.currentQuote.tags.forEach(currentTag => {
+        const indexTag = storedTags.findIndex(storedTag => storedTag === currentTag)
+        if (indexTag === -1) {
+          // mutable operation will lead to bugs here
+          // storedTags.push(currentTag)
+          storedTags = [...storedTags, currentTag]
+        }
+      })
+    }
+
+    // checking stored quotes
+    // avoid condition if array is empty
+    if (storedQuotes.length > 0) {
+      // check if quote already exists
+      const indexQuote = storedQuotes.findIndex(storedQuote => this.state.currentQuote.quote_id === storedQuote.quote_id)
+      if (indexQuote > -1) { // this means that quote already exists!
+        isNewQuote = false
+      }
+    }
+
+    let info = document.createElement('small');
+    if (isNewQuote) {
+      info.id = 'new-quote';
+      info.style.color = 'green';
+      info.textContent = 'NEW QUOTE SAVED'
+      event.currentTarget.after(info)
+      event.currentTarget.disabled = true
+    } else {
+      info.id = 'quote-already-saved';
+      info.style.color = 'red';
+      info.textContent = 'QUOTE ALREADY SAVED'
+      event.currentTarget.after(info)
+      event.currentTarget.disabled = true
+    }
+
+    this.setState((prevState) => {
+      const quotesToSave = (isNewQuote && this.state.error !== true) ? [...prevState.storedQuotes, this.state.currentQuote] : prevState.storedQuotes
+      // storing into localStorage
+      localStorage.setItem('trumpQuotes', JSON.stringify(quotesToSave))
+      localStorage.setItem('trumpQuotesTags', JSON.stringify(storedTags))
+      return {
+        ...this.state, // see immutables
+        storedQuotes: [...quotesToSave],
+        storedTags: [...storedTags]
+      }
+    })
   }
 
   onTagClick = (event) => this.setState({ selectedTag: event.target.name })
@@ -166,6 +194,7 @@ class App extends React.Component {
           selectedTag={this.state.selectedTag}
           storedQuotes={this.state.storedQuotes}
           isLoaded={this.state.loading}
+          saveRandomQuote={this.saveRandomQuote}
           />
           <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
           <p>Tag salvati: {this.state.storedTags.length}</p>
