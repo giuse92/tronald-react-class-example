@@ -46,7 +46,8 @@ class App extends React.Component {
       storedTags: ((JSON.parse(localStorage.getItem('trumpQuotesTags'))) !== null 
       ? (JSON.parse(localStorage.getItem('trumpQuotesTags'))) : []),
       selectedTag: '',
-      isListMode: false
+      isListMode: false,
+      btnSaveDisabled: false
     }
   }
 
@@ -54,9 +55,6 @@ class App extends React.Component {
   fetchRandomTrump = async () => {
     let quote = {}
     let error = false
-
-    let getInfoElement = document.querySelector('small#new-quote') || document.querySelector('small#quote-already-exists');
-    getInfoElement !== null && getInfoElement.remove();
 
     try {
       this.setState({ loading: true })
@@ -83,7 +81,8 @@ class App extends React.Component {
           ...this.state, // see immutables
           currentQuote: error ? {} : quote,
           loading: false,
-          error
+          error,
+          btnSaveDisabled: false
         }
       })
     }
@@ -118,21 +117,6 @@ class App extends React.Component {
       }
     }
 
-    let info = document.createElement('small');
-    if (isNewQuote) {
-      info.id = 'new-quote';
-      info.style.color = 'green';
-      info.textContent = 'NEW QUOTE SAVED'
-      event.currentTarget.after(info)
-      event.currentTarget.disabled = true
-    } else {
-      info.id = 'quote-already-saved';
-      info.style.color = 'red';
-      info.textContent = 'QUOTE ALREADY SAVED'
-      event.currentTarget.after(info)
-      event.currentTarget.disabled = true
-    }
-
     this.setState((prevState) => {
       const quotesToSave = (isNewQuote && this.state.error !== true) ? [...prevState.storedQuotes, this.state.currentQuote] : prevState.storedQuotes
       // storing into localStorage
@@ -141,7 +125,8 @@ class App extends React.Component {
       return {
         ...this.state, // see immutables
         storedQuotes: [...quotesToSave],
-        storedTags: [...storedTags]
+        storedTags: [...storedTags],
+        btnSaveDisabled: true
       }
     })
   }
@@ -195,6 +180,8 @@ class App extends React.Component {
           storedQuotes={this.state.storedQuotes}
           isLoaded={this.state.loading}
           saveRandomQuote={this.saveRandomQuote}
+          btnSaveDisabled={this.state.btnSaveDisabled}
+          errState={this.state.fetchErr}
           />
           <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
           <p>Tag salvati: {this.state.storedTags.length}</p>

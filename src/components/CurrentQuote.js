@@ -7,6 +7,7 @@ const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes
     const month = monthsTxt[d.getMonth()];
     const year = d.getFullYear();
     const filteredQuotes = storedQuotes.filter(obj => selectedTag === obj.tags[0]);
+    const currentQuoteIndex = storedQuotes.findIndex(objQuote => objQuote.quote_id === currentQuoteState.quote_id);
 
     return (
         <>  
@@ -24,16 +25,19 @@ const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes
                                 })}
                             </ul>
                         </div>
-                        : null}
+                        : null
+            }
                 </>
-            )
+                )
                 : (
+                <>
                 <button
                 onClick={rest.saveRandomQuote} 
-                disabled={rest.isLoaded ? true : false}
+                disabled={(rest.isLoaded || rest.errState || rest.btnSaveDisabled || currentQuoteIndex > -1) && true}
                 >
-                    <h2>SAVE</h2>
+                    <h2>{currentQuoteIndex > -1 ? 'QUOTE SAVED' : 'SAVE'}</h2>
                 </button>
+                </>
                 )}
             {currentQuoteState.value !== undefined && (
                 <>
