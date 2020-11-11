@@ -24,7 +24,7 @@ import ErrorMessage from './components/ErrorMessage'
 // 7) arricchire il componente creato nel punto 2 con un meccanismo di cancellazione (solo in modalità lista)
 //    (utilizzate il campo "quote_id" all'interno della citazione)
 
-const RANDOMURL = 'https://api.tronalddump.io/random/quote'
+const RANDOMURL = 'https://api.tronalddump.io/random/quoteABC'
 // const SEARCHURL = 'https://api.tronalddump.io/search/quote'
 // const ALLTAGSURL = 'https://api.tronalddump.io/tag'
 const bidenSmilingSrc = 'https://d3g9pb5nvr3u7.cloudfront.net/authors/59bb2de59744155625a7c141/-435182605/256.jpg'
@@ -64,14 +64,14 @@ class App extends React.Component {
       // promise is still resolved even if no quotes got fetched (example: wrong url)
       // need to handle this situation manually
       // throw new Error blocks the execution, and jumps directly into 'CATCH'
-      if (data.message) throw new Error(data.message)
+      if (data.error) throw new Error(data.error)
 
       quote = { ...data }
 
     } catch (err) {
       console.log('SONO NEL CATCH: ', err)
       error = true;
-      error ? this.setState({ ...this.state, fetchErr: err }) : this.setState(...this.state);
+      //error ? this.setState({ ...this.state, fetchErr: err }) : this.setState(...this.state);
     } finally {
       // using setState with prevState
       // see https://css-tricks.com/understanding-react-setstate/
@@ -181,7 +181,7 @@ class App extends React.Component {
           isLoaded={this.state.loading}
           saveRandomQuote={this.saveRandomQuote}
           btnSaveDisabled={this.state.btnSaveDisabled}
-          errState={this.state.fetchErr}
+          errState={this.state.error}
           />
           <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
           <p>Tag salvati: {this.state.storedTags.length}</p>
