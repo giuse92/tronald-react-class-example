@@ -26,14 +26,14 @@ const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes
                             </ul>
                         </div>
                         : null
-            }
+                    }
                 </>
                 )
                 : (
                 <>
                 <button
                 onClick={rest.saveRandomQuote} 
-                disabled={(rest.isLoaded || rest.errState || rest.btnSaveDisabled || currentQuoteIndex > -1) && true}
+                disabled={rest.isLoaded || rest.errState || rest.btnSaveDisabled || currentQuoteIndex > -1}
                 >
                     <h2>{currentQuoteIndex > -1 ? 'QUOTE SAVED' : 'SAVE'}</h2>
                 </button>
