@@ -20,6 +20,7 @@ const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes
                                     return (
                                     <li key={`filtered-quotes-${i}`} style={{borderBottom: '2px solid white'}}>
                                         {q.value}
+                                        <button onClick={(e) => {e.stopPropagation(); rest.removeQuoteF(q.quote_id)}}><h2>REMOVE</h2></button>
                                     </li>
                                     )
                                 })}

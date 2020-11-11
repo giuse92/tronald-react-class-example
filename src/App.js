@@ -24,7 +24,7 @@ import ErrorMessage from './components/ErrorMessage'
 // 7) arricchire il componente creato nel punto 2 con un meccanismo di cancellazione (solo in modalità lista)
 //    (utilizzate il campo "quote_id" all'interno della citazione)
 
-const RANDOMURL = 'https://api.tronalddump.io/random/quoteABC'
+const RANDOMURL = 'https://api.tronalddump.io/random/quote'
 // const SEARCHURL = 'https://api.tronalddump.io/search/quote'
 // const ALLTAGSURL = 'https://api.tronalddump.io/tag'
 const bidenSmilingSrc = 'https://d3g9pb5nvr3u7.cloudfront.net/authors/59bb2de59744155625a7c141/-435182605/256.jpg'
@@ -131,6 +131,19 @@ class App extends React.Component {
     })
   }
 
+  removeQuoteFromList = (quoteIdList) => {
+    this.setState(() => {
+      const indexQ = this.state.storedQuotes.findIndex(obj => obj.quote_id === quoteIdList);
+      const newStoredQ = [...this.state.storedQuotes.slice(0, indexQ), ...this.state.storedQuotes.slice(indexQ + 1)];
+      localStorage.setItem('trumpQuotes', JSON.stringify(newStoredQ))
+      
+      return {
+        ...this.state,
+        storedQuotes: newStoredQ
+      }
+    })
+  }
+
   onTagClick = (event) => this.setState({ selectedTag: event.target.name })
   
   onModeClick = (mode) => (event) => {
@@ -182,6 +195,7 @@ class App extends React.Component {
           saveRandomQuote={this.saveRandomQuote}
           btnSaveDisabled={this.state.btnSaveDisabled}
           errState={this.state.error}
+          removeQuoteF={this.removeQuoteFromList}
           />
           <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
           <p>Tag salvati: {this.state.storedTags.length}</p>
