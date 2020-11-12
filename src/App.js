@@ -132,14 +132,20 @@ class App extends React.Component {
   }
 
   removeQuoteFromList = (quoteIdList) => {
-    this.setState(() => {
+    this.setState((prevState) => {
       const indexQ = this.state.storedQuotes.findIndex(obj => obj.quote_id === quoteIdList);
       const newStoredQ = [...this.state.storedQuotes.slice(0, indexQ), ...this.state.storedQuotes.slice(indexQ + 1)];
-      localStorage.setItem('trumpQuotes', JSON.stringify(newStoredQ))
-      
+      localStorage.setItem('trumpQuotes', JSON.stringify(newStoredQ));
+
+      const filteredBySelectedTag = newStoredQ.filter(quote => quote.tags[0] === this.state.selectedTag);
+      const indexSelectedTag = this.state.storedTags.findIndex(tagStr => tagStr === this.state.selectedTag);
+      const newStoredTags = [...this.state.storedTags.slice(0, indexSelectedTag), ...this.state.storedTags.slice(indexSelectedTag + 1)];
+      localStorage.setItem('trumpQuotesTags', JSON.stringify(newStoredTags));
+
       return {
         ...this.state,
-        storedQuotes: newStoredQ
+        storedQuotes: newStoredQ,
+        storedTags: filteredBySelectedTag.length === 0 ? newStoredTags : prevState.storedTags 
       }
     })
   }
