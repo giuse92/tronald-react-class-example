@@ -47,7 +47,8 @@ class App extends React.Component {
       ? (JSON.parse(localStorage.getItem('trumpQuotesTags'))) : []),
       selectedTag: '',
       isListMode: false,
-      btnSaveDisabled: false
+      btnSaveDisabled: JSON.parse(localStorage.getItem('trumpQuotesTags')) === null 
+      ? true : false
     }
   }
 
