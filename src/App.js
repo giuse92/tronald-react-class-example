@@ -185,7 +185,7 @@ class App extends React.Component {
             selectedTag={this.state.selectedTag}
           />) : (<>
             <p>
-              {this.state.error ? <ErrorMessage errState={this.state.fetchErr} /> : null}
+              {this.state.error ? <ErrorMessage /> : null}
                 <button onClick={this.fetchRandomTrump} disabled={this.state.loading || this.state.error}>
                 <h2>
                   {this.state.loading ? 'loading...' : 'RANDOM TRUMP QUOTE'}
