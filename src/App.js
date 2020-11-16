@@ -35,7 +35,7 @@ const App = (props) => {
   const [currentQuote, setCurrentQuote] = useState(((JSON.parse(localStorage.getItem('trumpCurrentQuote'))) !== null
     ? (JSON.parse(localStorage.getItem('trumpCurrentQuote')))
     : {}));
-  const [quotesToShow, setQuotesToShow] = useState([]);
+  //const [quotesToShow, setQuotesToShow] = useState([]);
   const [storedQuotes, setStoredQuotes] = useState(((JSON.parse(localStorage.getItem('trumpQuotes'))) !== null
     ? (JSON.parse(localStorage.getItem('trumpQuotes')))
     : []));
@@ -185,7 +185,18 @@ const App = (props) => {
   }
 
   const removeQuoteFromList = (quoteIdList) => {
-    this.setState((prevState) => {
+    const indexQ = storedQuotes.findIndex(obj => obj.quote_id === quoteIdList);
+    const newStoredQ = [...storedQuotes.slice(0, indexQ), ...storedQuotes.slice(indexQ + 1)];
+    localStorage.setItem('trumpQuotes', JSON.stringify(newStoredQ));
+
+    const filteredBySelectedTag = newStoredQ.filter(quote => quote.tags[0] === selectedTag);
+    const indexSelectedTag = storedTags.findIndex(tagStr => tagStr === selectedTag);
+    const newStoredTags = [...storedTags.slice(0, indexSelectedTag), ...storedTags.slice(indexSelectedTag + 1)];
+    localStorage.setItem('trumpQuotesTags', JSON.stringify(newStoredTags));
+
+    setStoredQuotes(newStoredQ);
+    setStoredTags(filteredBySelectedTag.length === 0 ? newStoredTags : storedTags)
+    /*this.setState((prevState) => {
       const indexQ = this.state.storedQuotes.findIndex(obj => obj.quote_id === quoteIdList);
       const newStoredQ = [...this.state.storedQuotes.slice(0, indexQ), ...this.state.storedQuotes.slice(indexQ + 1)];
       localStorage.setItem('trumpQuotes', JSON.stringify(newStoredQ));
@@ -200,18 +211,23 @@ const App = (props) => {
         storedQuotes: newStoredQ,
         storedTags: filteredBySelectedTag.length === 0 ? newStoredTags : prevState.storedTags 
       }
-    })
+    })*/
   }
 
-  const onTagClick = (event) => this.setState({ selectedTag: event.target.name })
-  
+  const onTagClick = (event) => setSelectedTag(event.target.name);
+  //const onTagClick = (event) => this.setState({ selectedTag: event.target.name })
+
   const onModeClick = (mode) => (event) => {
+    setIsListMode(event.currentTarget.id === 'listbutton' ? true : false);
+    setSelectedTag(event.currentTarget.id === 'randombutton' && '')
+  }  
+  /*const onModeClick = (mode) => (event) => {
     // console.log('MODE? ', mode)
     this.setState({ 
       isListMode: event.currentTarget.id === 'listbutton' ? true : false,
       selectedTag: event.currentTarget.id === 'randombutton' && '' 
     })
-  } 
+  }*/ 
 
   /*componentDidUpdate(prevProps, prevState) {
     // console.log('PROBLEM!!! ', prevState.storedTags.length, this.state.storedTags.length)
@@ -221,42 +237,42 @@ const App = (props) => {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={this.state.error ? bidenSmilingSrc : logo} className={`App-logo${this.state.loading ? " App-logo-spinning" : ""}`} alt="logo" />
+          <img src={error ? bidenSmilingSrc : logo} className={`App-logo${loading ? " App-logo-spinning" : ""}`} alt="logo" />
           <p>
-            <button className="button" id="randombutton" type="button" onClick={this.onModeClick('random')} disabled={!this.state.isListMode}>
+            <button className="button" id="randombutton" type="button" onClick={onModeClick('random')} disabled={!isListMode}>
               <h3> RANDOM MODE </h3> 
             </button>
-            <button className="button" id="listbutton" type="button" onClick={this.onModeClick('list')} disabled={this.state.isListMode}>
+            <button className="button" id="listbutton" type="button" onClick={onModeClick('list')} disabled={isListMode}>
               <h3> LIST MODE </h3>
             </button>
           </p>
-          {this.state.isListMode ? (<TagList
-            storedTags={this.state.storedTags}
-            onTagClick={this.onTagClick}
-            selectedTag={this.state.selectedTag}
+          {isListMode ? (<TagList
+            storedTags={storedTags}
+            onTagClick={onTagClick}
+            selectedTag={selectedTag}
           />) : (<>
             <p>
-              {this.state.error ? <ErrorMessage errState={this.state.fetchErr} /> : null}
-                <button onClick={this.fetchRandomTrump} disabled={this.state.loading || this.state.error}>
+              {error ? <ErrorMessage /> : null}
+                <button onClick={fetchRandomTrump} disabled={loading || error}>
                 <h2>
-                  {this.state.loading ? 'loading...' : 'RANDOM TRUMP QUOTE'}
+                  {loading ? 'loading...' : 'RANDOM TRUMP QUOTE'}
                 </h2>
               </button>
             </p>
           </>)}
           <CurrentQuote 
-          currentQuoteState={this.state.currentQuote} 
-          isListMode={this.state.isListMode}
-          selectedTag={this.state.selectedTag}
-          storedQuotes={this.state.storedQuotes}
-          isLoaded={this.state.loading}
-          saveRandomQuote={this.saveRandomQuote}
-          btnSaveDisabled={this.state.btnSaveDisabled}
-          errState={this.state.error}
-          removeQuoteF={this.removeQuoteFromList}
+          currentQuoteState={currentQuote} 
+          isListMode={isListMode}
+          selectedTag={selectedTag}
+          storedQuotes={storedQuotes}
+          isLoaded={loading}
+          saveRandomQuote={saveRandomQuote}
+          btnSaveDisabled={btnSaveDisabled}
+          errState={error}
+          removeQuoteF={removeQuoteFromList}
           />
-          <p>Citazioni salvate: {this.state.storedQuotes.length}</p>
-          <p>Tag salvati: {this.state.storedTags.length}</p>
+          <p>Citazioni salvate: {storedQuotes.length}</p>
+          <p>Tag salvati: {storedTags.length}</p>
         </header>
       </div>
     );
