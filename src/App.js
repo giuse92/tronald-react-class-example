@@ -262,17 +262,7 @@ const App = (props) => {
               </button>
             </p>
           </>)}
-          <CurrentQuote
-            currentQuoteState={currentQuote}
-            isListMode={isListMode}
-            selectedTag={selectedTag}
-            storedQuotes={storedQuotes}
-            isLoaded={loading}
-            saveRandomQuote={saveRandomQuote}
-            btnSaveDisabled={btnSaveDisabled}
-            errState={error}
-            removeQuoteF={removeQuoteFromList}
-          />
+          <CurrentQuote />
           <p>Citazioni salvate: {storedQuotes.length}</p>
           <p>Tag salvati: {storedTags.length}</p>
         </header>
