@@ -1,4 +1,5 @@
 import React from 'react';
+import MyContext from "./MyContext";
 
 const CurrentQuote = ({ currentQuoteState, isListMode, selectedTag, storedQuotes, ...rest}) => {
     const monthsTxt = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

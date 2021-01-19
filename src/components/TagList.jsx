@@ -1,6 +1,9 @@
 import React from 'react';
+import MyContext from "./MyContext";
 
-const TagList = ({ storedTags, onTagClick, selectedTag }) => {
+const TagList = () => {
+    const { storedTags, onTagClick, selectedTag } = React.useContext(MyContext);
+
     return (
         <p>
             {storedTags.map((tag, index) =>

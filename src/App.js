@@ -3,7 +3,8 @@ import './App.css';
 import logo from './trump.gif';
 import TagList from './components/TagList';
 import CurrentQuote from './components/CurrentQuote';
-import ErrorMessage from './components/ErrorMessage'
+import ErrorMessage from './components/ErrorMessage';
+import MyContext from "./components/MyContext";
 
 // TODO:
 // FACILE
@@ -40,30 +41,30 @@ const App = (props) => {
     ? (JSON.parse(localStorage.getItem('trumpQuotes')))
     : []));
   const [storedTags, setStoredTags] = useState(((JSON.parse(localStorage.getItem('trumpQuotesTags'))) !== null
-    ? (JSON.parse(localStorage.getItem('trumpQuotesTags'))) 
+    ? (JSON.parse(localStorage.getItem('trumpQuotesTags')))
     : []));
   const [selectedTag, setSelectedTag] = useState('');
   const [isListMode, setIsListMode] = useState(false);
   const [btnSaveDisabled, setBtnSaveDisabled] = useState(JSON.parse(localStorage.getItem('trumpQuotesTags')) === null
-    ? true 
+    ? true
     : false);
 
-      /*loading: false,
-      error: false,
-      currentQuote: ((JSON.parse(localStorage.getItem('trumpCurrentQuote'))) !== null
-        ? (JSON.parse(localStorage.getItem('trumpCurrentQuote')))
-        : {}),
-      quotesToShow: [],
-      // getting storage string with key 'trumpQuotes' and parsing it (if exists)
-      storedQuotes: ((JSON.parse(localStorage.getItem('trumpQuotes'))) !== null 
-      ? (JSON.parse(localStorage.getItem('trumpQuotes'))) 
-      : []),
-      storedTags: ((JSON.parse(localStorage.getItem('trumpQuotesTags'))) !== null 
-      ? (JSON.parse(localStorage.getItem('trumpQuotesTags'))) : []),
-      selectedTag: '',
-      isListMode: false,
-      btnSaveDisabled: JSON.parse(localStorage.getItem('trumpQuotesTags')) === null 
-      ? true : false*/
+  /*loading: false,
+  error: false,
+  currentQuote: ((JSON.parse(localStorage.getItem('trumpCurrentQuote'))) !== null
+    ? (JSON.parse(localStorage.getItem('trumpCurrentQuote')))
+    : {}),
+  quotesToShow: [],
+  // getting storage string with key 'trumpQuotes' and parsing it (if exists)
+  storedQuotes: ((JSON.parse(localStorage.getItem('trumpQuotes'))) !== null 
+  ? (JSON.parse(localStorage.getItem('trumpQuotes'))) 
+  : []),
+  storedTags: ((JSON.parse(localStorage.getItem('trumpQuotesTags'))) !== null 
+  ? (JSON.parse(localStorage.getItem('trumpQuotesTags'))) : []),
+  selectedTag: '',
+  isListMode: false,
+  btnSaveDisabled: JSON.parse(localStorage.getItem('trumpQuotesTags')) === null 
+  ? true : false*/
 
   // dividere in fetchRandomTrump() e saveRandomTrump()
   const fetchRandomTrump = async () => {
@@ -95,7 +96,7 @@ const App = (props) => {
       setLoading(false);
       setError(error);
       setBtnSaveDisabled(false);
-            
+
       /*this.setState((prevState) => {
         localStorage.setItem('trumpCurrentQuote', JSON.stringify(quote))
         return {
@@ -164,7 +165,7 @@ const App = (props) => {
     */
 
 
-    const quotesToSave = (isNewQuote && error !== true) ? [...storedQuotesX, currentQuote]: storedQuotes;
+    const quotesToSave = (isNewQuote && error !== true) ? [...storedQuotesX, currentQuote] : storedQuotes;
     localStorage.setItem('trumpQuotes', JSON.stringify(quotesToSave));
     localStorage.setItem('trumpQuotesTags', JSON.stringify(storedTags));
     setStoredQuotes([...quotesToSave]);
@@ -220,62 +221,64 @@ const App = (props) => {
   const onModeClick = (mode) => (event) => {
     setIsListMode(event.currentTarget.id === 'listbutton' ? true : false);
     setSelectedTag(event.currentTarget.id === 'randombutton' && '')
-  }  
+  }
   /*const onModeClick = (mode) => (event) => {
     // console.log('MODE? ', mode)
     this.setState({ 
       isListMode: event.currentTarget.id === 'listbutton' ? true : false,
       selectedTag: event.currentTarget.id === 'randombutton' && '' 
     })
-  }*/ 
+  }*/
 
   /*componentDidUpdate(prevProps, prevState) {
     // console.log('PROBLEM!!! ', prevState.storedTags.length, this.state.storedTags.length)
     if (prevState.storedTags.length !== this.state.storedTags.length) console.log('DIFFERENZA STOREDTAG!')
   }*/
 
-    return (
+  return (
+    <MyContext.Provider value={{
+      loading, error, currentQuote, storedQuotes, storedTags, selectedTag, isListMode, btnSaveDisabled,
+      fetchRandomTrump, saveRandomQuote, removeQuoteFromList, onTagClick, onModeClick
+    }}>
       <div className="App">
         <header className="App-header">
           <img src={error ? bidenSmilingSrc : logo} className={`App-logo${loading ? " App-logo-spinning" : ""}`} alt="logo" />
           <p>
             <button className="button" id="randombutton" type="button" onClick={onModeClick('random')} disabled={!isListMode}>
-              <h3> RANDOM MODE </h3> 
+              <h3> RANDOM MODE </h3>
             </button>
             <button className="button" id="listbutton" type="button" onClick={onModeClick('list')} disabled={isListMode}>
               <h3> LIST MODE </h3>
             </button>
           </p>
           {isListMode ? (<TagList
-            storedTags={storedTags}
-            onTagClick={onTagClick}
-            selectedTag={selectedTag}
           />) : (<>
             <p>
               {error ? <ErrorMessage /> : null}
-                <button onClick={fetchRandomTrump} disabled={loading || error}>
+              <button onClick={fetchRandomTrump} disabled={loading || error}>
                 <h2>
                   {loading ? 'loading...' : 'RANDOM TRUMP QUOTE'}
                 </h2>
               </button>
             </p>
           </>)}
-          <CurrentQuote 
-          currentQuoteState={currentQuote} 
-          isListMode={isListMode}
-          selectedTag={selectedTag}
-          storedQuotes={storedQuotes}
-          isLoaded={loading}
-          saveRandomQuote={saveRandomQuote}
-          btnSaveDisabled={btnSaveDisabled}
-          errState={error}
-          removeQuoteF={removeQuoteFromList}
+          <CurrentQuote
+            currentQuoteState={currentQuote}
+            isListMode={isListMode}
+            selectedTag={selectedTag}
+            storedQuotes={storedQuotes}
+            isLoaded={loading}
+            saveRandomQuote={saveRandomQuote}
+            btnSaveDisabled={btnSaveDisabled}
+            errState={error}
+            removeQuoteF={removeQuoteFromList}
           />
           <p>Citazioni salvate: {storedQuotes.length}</p>
           <p>Tag salvati: {storedTags.length}</p>
         </header>
       </div>
-    );
+    </MyContext.Provider>
+  );
 }
 
 export default App;
